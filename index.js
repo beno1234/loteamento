@@ -18,6 +18,31 @@ const apiKey = "f0fa524ccf43188097c3a4a3e261fcb3"; // Substitua pela sua chave d
 // "Data Center" do Mailchimp
 const dataCenter = "us11"; // Substitua pelo seu "Data Center" do Mailchimp
 
+app.get("/check-email/:email", async (req, res) => {
+  const { email } = req.params;
+
+  try {
+    const endpoint = `https://${dataCenter}.api.mailchimp.com/3.0/search-members?query=${encodeURIComponent(
+      email
+    )}`;
+
+    const headers = {
+      Authorization: `apikey ${apiKey}`,
+    };
+
+    const response = await axios.get(endpoint, { headers });
+
+    if (response.data.exact_matches.total_items > 0) {
+      return res.status(200).json({ message: "Email já cadastrado" });
+    } else {
+      return res.status(404).json({ message: "Email não cadastrado" });
+    }
+  } catch (error) {
+    console.error("Erro ao verificar o email:", error);
+    res.status(500).json({ error: "Erro ao verificar o email" });
+  }
+});
+
 app.post("/cadastro", async (req, res) => {
   const { email, nome, telefone, mensagem } = req.body;
 
@@ -76,7 +101,7 @@ async function enviarEmailBackend(nome, telefone, email, mensagem) {
     // Corpo do e-mail
     let info = await transporter.sendMail({
       from: "vendascardealempreendimentos@gmail.com",
-      to: ["vendascardealempreendimentos@gmail.com"],
+      to: ["benolopesdias@gmail.com"],
       subject: "Frutal - Mensagem do formulário da landing page",
       html: `<p>Nome: ${nome}</p>
              <p>Telefone: ${telefone}</p>
