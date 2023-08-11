@@ -101,7 +101,7 @@ async function enviarEmailBackend(nome, telefone, email, mensagem) {
     // Corpo do e-mail
     let info = await transporter.sendMail({
       from: "vendascardealempreendimentos@gmail.com",
-      to: ["benolopesdias@gmail.com"],
+      to: ["vendascardealempreendimentos@gmail.com"],
       subject: "Frutal - Mensagem do formulário da landing page",
       html: `<p>Nome: ${nome}</p>
              <p>Telefone: ${telefone}</p>
